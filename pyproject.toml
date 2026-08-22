@@ -1,3 +1,4 @@
+# Temporary replay-baseline marker; removed before the measured dependency patch.
 [project]
 name = "browser-use"
 description = "Make websites accessible for AI agents"
