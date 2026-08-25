@@ -161,3 +161,22 @@ Do what has been asked; nothing more, nothing less.
 NEVER create files unless they're absolutely necessary for achieving your goal.
 ALWAYS prefer editing an existing file to creating a new one.
 NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.
+
+## Runtime evidence (Garnet)
+
+Pull requests in this repository can carry a kernel-recorded execution record
+from Garnet Runtime Review. The PR description holds a `Runtime evidence
+(Garnet)` section between `<!-- garnet:evidence:begin -->` and
+`<!-- garnet:evidence:end -->` — a verbatim mirror of the trusted Garnet
+Runtime Review comment. When reviewing a pull request, follow
+[`REVIEW.md`](REVIEW.md) before finalizing the review. In short:
+
+1. Use the mirrored record only when its `<!-- garnet:commit <sha> -->` equals
+   the PR head. A missing, stale, or pending record is no runtime evidence,
+   not a clean run.
+2. Cross-check the record against the diff: name any recorded destination or
+   execution chain the change does not explain, or state that recorded
+   behavior is explained by the change.
+3. Prefix every runtime-grounded statement exactly with
+   `Runtime evidence (Garnet, head <sha7>):` followed by a space. Never repeat Garnet verdicts,
+   scores, or severities; judgment stays with you.
