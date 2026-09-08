@@ -1,0 +1,45 @@
+name: Garnet Dependency Replay
+
+on:
+  push:
+    branches:
+      - 'rb/**'
+  pull_request:
+    paths:
+      - 'pyproject.toml'
+      - 'uv.lock'
+      - '.github/workflows/garnet-dependency-replay.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: garnet-dependency-replay-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python-install:
+    name: Python dependency install (recorded)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Garnet Runtime Visibility
+        uses: garnet-org/action@v2
+        with:
+          api_token: ${{ secrets.GARNET_API_TOKEN }}
+
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Resolve and install the changed project dependencies
+        run: uv sync --all-extras --dev --refresh
+
+      - name: Hold capture window for delayed children
+        run: sleep 45
