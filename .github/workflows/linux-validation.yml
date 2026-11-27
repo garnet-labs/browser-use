@@ -27,6 +27,9 @@ jobs:
       - name: "Install dependencies"
         run: |
           uv sync --dev --all-extras --refresh-package browser-use-core
+      - name: "Build prerequisites"
+        run: |
+          uvx playwright install chromium --with-deps --no-shell
       - name: "Run checks"
         run: |
-          ANONYMIZED_TELEMETRY=false uv run pytest tests/ci/test_extension_config.py tests/ci/test_chrome_profile_helpers.py tests/ci/test_fallback_llm.py
+          IN_DOCKER=True ANONYMIZED_TELEMETRY=false uv run pytest tests/ci/test_extension_config.py tests/ci/test_chrome_profile_helpers.py tests/ci/test_fallback_llm.py
