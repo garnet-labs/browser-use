@@ -1,0 +1,32 @@
+name: Linux validation
+
+on:
+  push:
+    branches: [ci-linux-validation]
+
+permissions: {}
+
+jobs:
+  validation:
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: "actions/checkout@v6"
+        with:
+          persist-credentials: false
+      - uses: "garnet-org/action@v2.6.0"
+      - uses: "actions/setup-python@v6"
+        with:
+          python-version: "3.12"
+      - uses: "astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7"
+        with:
+          enable-cache: false
+      - name: "Install dependencies"
+        run: |
+          uv sync --dev --all-extras --refresh-package browser-use-core
+      - name: "Run checks"
+        run: |
+          ANONYMIZED_TELEMETRY=false uv run pytest tests/ci/test_extension_config.py tests/ci/test_chrome_profile_helpers.py tests/ci/test_fallback_llm.py
